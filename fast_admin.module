@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * Allows to create fast administration pages.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function fast_admin_menu() {
+
+  $items = array();
+
+  $ctt = node_type_get_types();
+  $weight = 0;
+  $weight = $weight + count($ctt);
+
+  $items['admin/fast-admin/clear-cache'] = array(
+    'title' => 'Clear cache',
+    'page callback' => 'fast_admin_clear_cache_cc',
+    'description' => 'Clear drupal and boost caches, and go to homepage',
+    'access arguments' => array('flush caches'),
+    'menu_name' => 'fast_admin',
+    'weight' => $weight++,
+  );
+
+  $items['admin/config/fast-admin'] = array(
+    'title' => 'Fast Admin',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+
+  return $items;
+
+}
+
+/**
+ * Implements hook_menu_link_alter(). 
+ */
+function fast_admin_menu_link_alter(&$item) {
+
+  if ($item['link_path'] == 'admin/fast-admin/clear-cache') {
+    global $user;
+    $item['options']['query']['token'] = drupal_get_token('fast_admin_cc_' . $user->uid);
+  }
+
+}
+
+/**
+ * Clear drupal and boost caches, and redirect to the home.
+ */
+function fast_admin_clear_cache_cc() {
+
+  global $user;
+
+  if (!isset($_GET['token'])) {
+    drupal_access_denied();
+  }
+  elseif (!drupal_valid_token($_GET['token'], 'fast_admin_cc_' . $user->uid)) {
+    drupal_access_denied();
+  }
+
+  drupal_flush_all_caches();
+  if (module_exists('boost')) {
+    $_boost = boost_transform_url();
+    $count = _boost_rmdir($_boost['base_dir']);
+  }
+  drupal_set_message(t('Caches cleared.'));
+  if (module_exists('login_destination')) {
+    $destination = login_destination_get_destination('login', NULL);
+    if ($destination !== FALSE) {
+      drupal_goto($destination[0], $destination[1]);
+    }
+    else{
+      drupal_goto('<front>');
+    }
+  }
+  else{
+    drupal_goto('<front>');
+  }
+
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function fast_admin_views_api() {
+
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'fast_admin') . '/views',
+  );
+
+}

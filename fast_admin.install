@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Handles module installation and upgrade tasks.
+ */
+
+// TO-DO: Tabla de opciones
+
+/**
+ * Implements hook_field_install().
+ */
+function fast_admin_install() {
+
+  $t = get_t();
+  $menu = array(
+    'menu_name' => 'fast_admin',
+    'title' => $t('Fast Admin'),
+    'description' => $t('Fast Admin links'),
+  );
+  menu_save($menu);
+
+}
+
+/**
+ * Implements hook_field_uninstall().
+ */
+function fast_admin_uninstall() {
+
+  $menu = menu_load('fast_admin');
+  menu_delete($menu);
+
+}

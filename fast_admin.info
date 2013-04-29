@@ -1,0 +1,8 @@
+name = Fast admin
+description = Allows to create fast admin interfaces
+package = Administration
+core = 7.x
+
+dependencies[] = views
+dependencies[] = menu
+
