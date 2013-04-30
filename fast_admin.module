@@ -71,11 +71,11 @@ function fast_admin_clear_cache_cc() {
     if ($destination !== FALSE) {
       drupal_goto($destination[0], $destination[1]);
     }
-    else{
+    else {
       drupal_goto('<front>');
     }
   }
-  else{
+  else {
     drupal_goto('<front>');
   }
 

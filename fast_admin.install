@@ -5,8 +5,6 @@
  * Handles module installation and upgrade tasks.
  */
 
-// TO-DO: Tabla de opciones
-
 /**
  * Implements hook_field_install().
  */

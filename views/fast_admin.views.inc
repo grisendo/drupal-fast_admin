@@ -18,13 +18,14 @@ function fast_admin_views_default_views() {
 
   $weight = 0;
 
+  // TO-DO: Any kind of entity.
   foreach ($ctt as $content_type => $content_type_obj) {
 
     $has_languages = variable_get('language_content_type_' . $content_type, FALSE);
 
     $path_name = str_replace('_', '-', $content_type);
 
-    $view = new view;
+    $view = new view();
     $view->name = 'fast_admin__node__' . $content_type;
     $view->description = '';
     $view->tag = 'fast_admin';
@@ -135,7 +136,8 @@ function fast_admin_views_default_views() {
       );
     }
 
-    if (module_exists('draggableviews')) { // TO-DO: Mark which entity types are
+    // TO-DO: Mark which entity types are with admin page.
+    if (module_exists('draggableviews')) {
       $handler->display->display_options['fields']['draggableviews']['id'] = 'draggableviews';
       $handler->display->display_options['fields']['draggableviews']['table'] = 'node';
       $handler->display->display_options['fields']['draggableviews']['field'] = 'draggableviews';
@@ -295,12 +297,9 @@ function fast_admin_views_default_views() {
     $handler->display->display_options['menu']['name'] = 'fast_admin';
     $handler->display->display_options['menu']['context'] = 0;
 
-
     $views[$view->name] = $view;
 
   }
-
-  // TO-DO: Any kind of entity!!
 
   return $views;
 
