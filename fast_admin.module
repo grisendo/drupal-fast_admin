@@ -35,7 +35,7 @@ function fast_admin_menu() {
 }
 
 /**
- * Implements hook_menu_link_alter(). 
+ * Implements hook_menu_link_alter().
  */
 function fast_admin_menu_link_alter(&$item) {
 
@@ -90,5 +90,37 @@ function fast_admin_views_api() {
     'api' => 2.0,
     'path' => drupal_get_path('module', 'fast_admin') . '/views',
   );
+
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function fast_admin_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+
+  if ((arg(0) == 'admin') && (arg(1) == 'fast-admin') && (arg(2) == 'node') && (arg(3))) {
+    $t = get_t();
+    $entity = arg(2);
+    $bundle = arg(3);
+    $info = entity_get_info($entity);
+    $bundle_name = isset($info['bundles'][$bundle]) ? $info['bundles'][$bundle]['label'] : '';
+    if ($bundle_name) {
+      $data['actions']['output'][] = array(
+        '#theme' => 'menu_local_task',
+        '#link' => array(
+          'title' => t(
+            'Add new %content_type',
+            array(
+              '%content_type' => $t($bundle_name),
+            )
+          ),
+          'href' => 'node/add/' . $bundle,
+          'localized_options' => array(
+            'html' => TRUE,
+          ),
+        ),
+      );
+    }
+  }
 
 }
